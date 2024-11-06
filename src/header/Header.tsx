@@ -6,6 +6,8 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { useSignOutManager } from "@/services/auth";
 import { LoadingSpinner } from "@/components/extension/loading-spinner";
 
+import logoImage from "@/assets/logo.png";
+
 interface LinkProps {
   href: string;
   children: React.ReactNode;
@@ -49,7 +51,7 @@ const Header = () => {
     <header className="sticky top-0 w-full flex h-16 items-center gap-4 border-b bg-background px-6 z-50 bg-purple-700">
       <nav className="flex font-medium flex-row items-center gap-5 text-sm">
         <LogoLink href="/">
-          <BedSingle />
+        <img src={logoImage} alt="Logo" className="w-8 h-8" />
         </LogoLink>
         <HeaderLink href="/hotels"><div className="text-white">Hotels</div></HeaderLink>
         <HeaderLink href="/rooms"><div className="text-white">Analysis</div></HeaderLink>

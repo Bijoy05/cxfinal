@@ -11,7 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { PlusCircle } from "lucide-react";
+
 
 // Importing images from /src/assets/
 import beefImg from "@/assets/beef.webp";
@@ -22,6 +24,8 @@ export const Flights: React.FC = () => {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [flightDate, setFlightDate] = useState<string>("");
   const [flightNumber, setFlightNumber] = useState<string>("");
+  const navigate = useNavigate();
+
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -156,7 +160,8 @@ export const Flights: React.FC = () => {
       {/* Generate Report Button */}
       <Button
         className="mt-6 w-full h-12 mx-auto flex justify-center"
-        onClick={() => alert("Flight Added")}
+        onClick={() => navigate("/rooms")}
+
       >
         <PlusCircle className="mr-2 h-5 w-5" />
         Add Flight

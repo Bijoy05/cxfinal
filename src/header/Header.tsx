@@ -60,7 +60,7 @@ const Header = () => {
         {isSignOutPending ? (
           <LoadingSpinner />
         ) : (
-          <Button onClick={() => signOutManager()}>Log Out</Button>
+          <Button>Log Out</Button>
         )}
       </div>
     </header>

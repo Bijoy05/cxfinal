@@ -1,381 +1,167 @@
-import { DataTable } from "@/components/extension/data-table";
-import { DataTableColumnHeader } from "@/components/extension/data-table-column-header";
-import { LoadingSpinner } from "@/components/extension/loading-spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+"use client";
+// after pasting
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+// Register necessary components for Chart.js
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  useCreateRoom,
-  useGetHotelsWithRooms,
-} from "@/services/room";
-import { ROOM_STATUS, Room } from "@/types/models/room";
-import { DialogProps } from "@radix-ui/react-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Formik } from "formik";
-import {
-  AlertCircle,
-  Archive,
-  ExternalLink,
-  ImageOff,
-  MoreHorizontal,
-  PlusCircle,
-  Terminal,
-  Trash2,
-} from "lucide-react";
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+// Import images from the assets folder
+import BeefPastramiSaladImage from "@/assets/beefpastramisalad.jpeg";
+import SteamedPorkImage from "@/assets/steamedpork.jpeg";
 
-export const columns: ColumnDef<Room>[] = [
-  {
-    accessorKey: "images",
-    header: "",
-    cell: (props) =>
-      (props.getValue() as string[])?.length ? (
-        <img
-          alt="Product img"
-          className="aspect-square rounded-md object-cover"
-          height="64"
-          src={(props.getValue() as string[])[0]}
-          width="64"
-        />
-      ) : (
-        <ImageOff size={64} />
-      ),
-  },
-  {
-    accessorKey: "type",
-    header: "Type",
-    cell: ({ row }) => {
-      const roomId = row.original.id;
-      return (
-        <NavLink to={`/rooms/${roomId}`} className="hover:underline">
-          {row.original.type}
-        </NavLink>
-      );
+
+const wasteByMealServiceData = {
+  labels: ["Chicken Rice", "Shrimp Noodles", "Caesar Salad"],
+  datasets: [
+    {
+      label: "Waste (%)",
+      data: [20, 25, 34],
+      backgroundColor: "rgba(255, 99, 132, 0.8)", // Solid color
     },
-  },
-  {
-    accessorKey: "price",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price" />
-    ),
-    cell: (props) => {
-      const price = props.getValue() as number;
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "BDT",
-      }).format(price);
-
-      return price ? formatted : undefined;
-    },
-  },
-  {
-    accessorKey: "qty",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Quantity" />
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: (props) => {
-      const value = props.getValue() as string;
-      return <Badge variant="outline">{value}</Badge>;
-    },
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const roomId = row.original.id;
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button aria-haspopup="true" size="icon" variant="ghost">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <NavLink to={`/rooms/${roomId}`}>
-              <DropdownMenuItem className="gap-2">
-                <ExternalLink className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Open
-                </span>
-              </DropdownMenuItem>
-            </NavLink>
-            <DropdownMenuItem className="gap-2" disabled>
-              <Archive className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                Archive
-              </span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2" disabled>
-              <Trash2 className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                Delete
-              </span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
-interface AddRoomModalProps extends DialogProps {
-  hotelId: string;
-}
-
-export const AddRoomModal: React.FC<AddRoomModalProps> = ({
-  open,
-  onOpenChange,
-  hotelId,
-}) => {
-  const {
-    mutate: createRoom,
-    isPending: isCreatePending,
-    isError: isCreateError,
-    error: createError,
-  } = useCreateRoom();
-
-  return (
-    <Formik
-      initialValues={{ type: "" }}
-      onSubmit={(values) => createRoom({ ...values, hotelId: hotelId })}
-    >
-      {(formik) => (
-        <form onSubmit={formik.handleSubmit}>
-          <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Add New Room</DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                {isCreateError && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{createError.message}</AlertDescription>
-                  </Alert>
-                )}
-                <div className="w-full grid gap-3">
-                  <Label htmlFor="type">Room Type</Label>
-                  <Input
-                    id="type"
-                    type="string"
-                    className="w-full"
-                    value={formik.values.type}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <DialogClose asChild>
-                  {isCreatePending ? (
-                    <LoadingSpinner />
-                  ) : (
-                    <Button
-                      type="submit"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        formik.handleSubmit();
-                      }}
-                    >
-                      Create
-                    </Button>
-                  )}
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </form>
-      )}
-    </Formik>
-  );
+  ],
 };
 
-interface RoomsTableProps {
-  rooms: Room[];
-  roomStatus: ROOM_STATUS | undefined;
-}
-
-export const RoomsTable: React.FC<RoomsTableProps> = ({
-  rooms,
-  roomStatus,
-}) => {
-  const filteredRooms = rooms!.filter(
-    (room) => !roomStatus || room.status === roomStatus
-  );
-
-  return <DataTable columns={columns} data={filteredRooms} />;
+const wasteByFoodCategoryData = {
+  labels: ["Low Carb", "High Protein", "Vegetables"],
+  datasets: [
+    {
+      label: "Waste (%)",
+      data: [15, 30, 25],
+      backgroundColor: "rgba(54, 162, 235, 0.8)", // Solid color
+    },
+  ],
 };
 
-export const Rooms = () => {
-  const [selectedHotelId, setSelectedHotelId] = useState<string | undefined>();
-  const [openAddRoomModal, setOpenAddRoomModel] = useState<boolean>(false);
-  const [statusFilter, setStatusFilter] = useState<ROOM_STATUS | undefined>(
-    undefined
-  );
+const chartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      display: false,
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      max: 40,
+    },
+  },
+};
 
-  const { data: hotelsWithRooms, isLoading, isError, error } = useGetHotelsWithRooms();
 
-  if (isLoading)
-    return (
-      <div className="mx-auto flex flex-col w-full">
-        <LoadingSpinner />
-      </div>
-    );
-
-  if (isError) {
-    return (
-      <div className="mx-auto flex flex-col w-full">
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error.message}</AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
-  if (hotelsWithRooms!.length === 0) {
-    return (
-      <div className="mx-auto flex flex-col w-full">
-        <Alert>
-          <Terminal className="h-4 w-4" />
-          <AlertTitle>Heads up!</AlertTitle>
-          <AlertDescription>
-            Please create a hotel/location first!
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
-  const selectedHotelIdWithDefault =
-    selectedHotelId ?? hotelsWithRooms![0].hotel.id;
-
-  const hotelOptions = hotelsWithRooms!.map((hotelsWithRooms) => ({
-    label: hotelsWithRooms.hotel.name,
-    value: hotelsWithRooms.hotel.id,
-  }));
-
-  const selectedHotelWithRooms = hotelsWithRooms!.find(
-    (hotelWithRooms) => hotelWithRooms.hotel.id == selectedHotelIdWithDefault
-  )!;
-
-  const rooms = selectedHotelWithRooms.rooms;
-
+export const Rooms: React.FC = () => {
   return (
-    <>
-      <div className="mx-auto flex flex-col w-full">
-        <Tabs defaultValue="all">
-          <div className="flex items-center">
-            <TabsList>
-              <TabsTrigger
-                value="all"
-                onClick={() => setStatusFilter(undefined)}
-              >
-                All
-              </TabsTrigger>
-              {Object.values(ROOM_STATUS).map((status) => (
-                <TabsTrigger
-                  key={status}
-                  value={status}
-                  onClick={() => setStatusFilter(status)}
-                >
-                  {status}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            <div className="ml-auto flex items-center gap-2">
-              {/* specify width */}
-              <Select
-                value={selectedHotelIdWithDefault}
-                onValueChange={setSelectedHotelId}
-              >
-                <SelectTrigger
-                  id="hotelId"
-                  aria-label="Select hotel"
-                  className="w-[250px]"
-                >
-                  <SelectValue placeholder="Select Hotel" />
-                </SelectTrigger>
-                <SelectContent>
-                  {hotelOptions.map((option, i) => (
-                    <SelectItem key={i} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button
-                size="sm"
-                className="h-8 gap-1"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setOpenAddRoomModel(true);
-                }}
-              >
-                <PlusCircle className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  New Room
-                </span>
-              </Button>
+    <div className="mx-auto w-full max-w-3xl p-4">
+      <h1 className="text-2xl font-bold mb-4">Flight 179</h1>
+      
+      {/* Filter Overview Section */}
+      <h2 className="text-lg font-semibold mb-2">Filter Overview</h2>
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <div>
+          <p className="text-gray-500">Flight Date</p>
+          <p>05/11/24</p>
+        </div>
+        <div>
+          <p className="text-gray-500">Flight Region</p>
+          <p>APAC - Asia</p>
+        </div>
+        <div>
+          <p className="text-gray-500">Flight Route</p>
+          <p>LAX to JFK</p>
+        </div>
+      </div>
+
+      {/* AI Image Process Output */}
+      <h2 className="text-lg font-semibold mb-3">AI Image Process Output</h2>
+      <div className="aspect-video w-full bg-gray-200 rounded-lg flex items-center justify-center mb-6">
+        <p className="text-gray-500">[Airplane Image Placeholder]</p>
+      </div>
+
+      
+      {/* Flight Food Waste Analysis */}
+<h2 className="text-lg font-semibold mb-3">Flight Food Waste Analysis</h2>
+<div className="flex gap-6 mb-6">
+  <Card className="w-1/2">
+    <CardHeader>
+      <CardTitle>Waste by Meal Service</CardTitle>
+      <CardDescription>Average: 29%</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <Bar data={wasteByMealServiceData} options={chartOptions} />
+    </CardContent>
+  </Card>
+  <Card className="w-1/2">
+    <CardHeader>
+      <CardTitle>Waste by Food Category</CardTitle>
+      <CardDescription>Average: 27%</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <Bar data={wasteByFoodCategoryData} options={chartOptions} />
+    </CardContent>
+  </Card>
+</div>
+
+
+      {/* Meal Recommendation */}
+      <h2 className="text-lg font-semibold mb-3">Meal Recommendation</h2>
+      <div className="grid gap-4">
+        {[
+          {
+            title: "Beef Pastrami Salad",
+            labels: ["High Protein", "Low Carb", "Seasonal Vegetables"],
+            waste: "03%",
+            image: BeefPastramiSaladImage,
+          },
+          {
+            title: "Steamed Pork with Preserved Mustard Greens",
+            labels: ["High Protein", "Low Carb", "Seasonal Vegetables"],
+            waste: "04%",
+            image: SteamedPorkImage,
+          },
+        ].map((meal, index) => (
+          <Card key={index} className="flex">
+            <div className="w-1/3">
+              <img
+                src={meal.image}
+                alt={meal.title}
+                className="w-full h-full object-cover rounded-l-lg"
+              />
             </div>
-          </div>
-          <Card x-chunk="dashboard-06-chunk-0" className="mt-4">
-            <CardHeader>
-              <CardTitle>Rooms</CardTitle>
-              <CardDescription>Manage your rooms</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RoomsTable rooms={rooms} roomStatus={statusFilter} />
+            <CardContent className="flex-1 p-4">
+              <CardTitle>{meal.title}</CardTitle>
+              <div className="flex flex-wrap gap-2 my-2">
+                {meal.labels.map((label, idx) => (
+                  <Badge key={idx} variant="secondary">
+                    {label}
+                  </Badge>
+                ))}
+              </div>
+              <p className="text-gray-500">Estimated Waste: {meal.waste}</p>
             </CardContent>
           </Card>
-        </Tabs>
+        ))}
       </div>
-      <AddRoomModal
-        open={openAddRoomModal}
-        onOpenChange={setOpenAddRoomModel}
-        hotelId={selectedHotelIdWithDefault}
-      />
-    </>
+    </div>
   );
 };
+

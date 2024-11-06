@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/Root";
 import { Home } from "./pages/home/Home";
 import { Rooms } from "./pages/rooms/Rooms";
-import { RoomPage } from "./pages/rooms/Room";
+//import { RoomPage } from "./pages/rooms/Room";
 import { Bookings } from "./pages/bookings/Bookings";
 import { BookingPage } from "./pages/bookings/Booking";
 import { ThemeProvider } from "./components/theme-provider";
@@ -45,10 +45,7 @@ const router = createBrowserRouter([
         path: "/rooms",
         element: <Rooms />,
       },
-      {
-        path: "/rooms/:roomId",
-        element: <RoomPage />,
-      },
+      
       {
         path: "/bookings",
         element: <Bookings />,

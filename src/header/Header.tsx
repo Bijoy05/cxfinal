@@ -52,7 +52,7 @@ const Header = () => {
           <BedSingle />
         </LogoLink>
         <HeaderLink href="/hotels">Hotels</HeaderLink>
-        <HeaderLink href="/rooms">Rooms</HeaderLink>
+        <HeaderLink href="/rooms">Analysis</HeaderLink>
         <HeaderLink href="/flights">Flights</HeaderLink>
       </nav>
       <div className="flex items-center ml-auto gap-2">

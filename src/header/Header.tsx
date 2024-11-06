@@ -46,12 +46,12 @@ const Header = () => {
   } = useSignOutManager();
 
   return (
-    <header className="sticky top-0 w-full flex h-16 items-center gap-4 border-b bg-background px-6 z-50">
+    <header className="sticky top-0 w-full flex h-16 items-center gap-4 border-b bg-background px-6 z-50 bg-[#742C94]">
       <nav className="flex font-medium flex-row items-center gap-5 text-sm">
         <LogoLink href="/">
           <BedSingle />
         </LogoLink>
-        <HeaderLink href="/hotels">Hotels</HeaderLink>
+        <HeaderLink href="/hotels"><div className="text-white">Hotels</div></HeaderLink>
         <HeaderLink href="/rooms">Analysis</HeaderLink>
         <HeaderLink href="/flights">Flights</HeaderLink>
       </nav>

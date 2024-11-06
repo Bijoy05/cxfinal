@@ -78,8 +78,8 @@ export const Rooms: React.FC = () => {
       <h2 className="text-lg font-semibold mb-2">Filter Overview</h2>
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div>
-          <p className="text-gray-500">Flight Date Range</p>
-          <p>01/01/2023 - 01/01/2024</p>
+          <p className="text-gray-500">Flight Date</p>
+          <p>05/11/24</p>
         </div>
         <div>
           <p className="text-gray-500">Flight Region</p>

@@ -159,7 +159,7 @@ export const Flights: React.FC = () => {
 
       {/* Generate Report Button */}
       <Button
-        className="mt-6 w-full h-12 mx-auto flex justify-center"
+        className="mt-6 w-full h-12 mx-auto flex justify-center bg-[#742C94] hover:bg-purple-700"
         onClick={() => navigate("/rooms")}
 
       >

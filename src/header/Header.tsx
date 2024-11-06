@@ -53,7 +53,7 @@ const Header = () => {
         <LogoLink href="/">
         <img src={logoImage} alt="Logo" className="w-8 h-8" />
         </LogoLink>
-        <HeaderLink href="/hotels"><div className="text-white">Hotels</div></HeaderLink>
+        <HeaderLink href="/hotels"><div className="text-white">Inventory</div></HeaderLink>
         <HeaderLink href="/rooms"><div className="text-white">Analysis</div></HeaderLink>
         <HeaderLink href="/flights"><div className="text-white">Flights</div></HeaderLink>
       </nav>
@@ -62,7 +62,7 @@ const Header = () => {
         {isSignOutPending ? (
           <LoadingSpinner />
         ) : (
-          <Button>Log Out</Button>
+          <Button className="bg-purple-950">Log Out</Button>
         )}
       </div>
     </header>

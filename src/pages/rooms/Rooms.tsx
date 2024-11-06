@@ -1,5 +1,7 @@
 "use client";
 // after pasting
+
+import { useNavigate } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -39,7 +41,7 @@ const wasteByMealServiceData = {
     {
       label: "Waste (%)",
       data: [20, 25, 34],
-      backgroundColor: "rgba(255, 99, 132, 0.8)", // Solid color
+      backgroundColor: "#742C94", // Solid color
     },
   ],
 };
@@ -50,7 +52,7 @@ const wasteByFoodCategoryData = {
     {
       label: "Waste (%)",
       data: [15, 30, 25],
-      backgroundColor: "rgba(54, 162, 235, 0.8)", // Solid color
+      backgroundColor: "#742C94", // Solid color
     },
   ],
 };
@@ -72,6 +74,7 @@ const chartOptions = {
 
 
 export const Rooms: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="mx-auto w-full max-w-3xl p-4">
       <h1 className="text-2xl font-bold mb-4">Flight 179</h1>
@@ -95,8 +98,8 @@ export const Rooms: React.FC = () => {
 
       {/* AI Image Process Output */}
       <h2 className="text-lg font-semibold mb-3">AI Image Process Output</h2>
-      <div className="aspect-video w-full bg-gray-200 rounded-lg flex-1 items-center justify-center mb-6">
-        <img src={foodWasteImage}/>
+      <div className="aspect-video w-full bg-gray-200 rounded-lg flex items-center justify-center p-8 mb-6">
+        <img className="rounded-lg" src={foodWasteImage}/>
       </div>
 
       
@@ -162,6 +165,14 @@ export const Rooms: React.FC = () => {
             </CardContent>
           </Card>
         ))}
+        <Button
+        className="mt-6 w-full h-12 mx-auto flex justify-center bg-[#742C94] hover:bg-purple-700"
+        onClick={() => navigate("/hotels")}
+
+      >
+        <PlusCircle className="mr-2 h-5 w-5" />
+        Regenrate Inventory Recommendation
+      </Button>
       </div>
     </div>
   );

@@ -46,7 +46,7 @@ const Header = () => {
   } = useSignOutManager();
 
   return (
-    <header className="sticky top-0 w-full flex h-16 items-center gap-4 border-b bg-background px-6 z-50 bg-[#742C94]">
+    <header className="sticky top-0 w-full flex h-16 items-center gap-4 border-b bg-background px-6 z-50 bg-purple-700">
       <nav className="flex font-medium flex-row items-center gap-5 text-sm">
         <LogoLink href="/">
           <BedSingle />

@@ -11,6 +11,8 @@ import {
   Legend,
 } from "chart.js";
 
+import foodWasteImage from "@/assets/foodwaste.png";
+
 // Register necessary components for Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -93,8 +95,8 @@ export const Rooms: React.FC = () => {
 
       {/* AI Image Process Output */}
       <h2 className="text-lg font-semibold mb-3">AI Image Process Output</h2>
-      <div className="aspect-video w-full bg-gray-200 rounded-lg flex items-center justify-center mb-6">
-        <p className="text-gray-500">[Airplane Image Placeholder]</p>
+      <div className="aspect-video w-full bg-gray-200 rounded-lg flex-1 items-center justify-center mb-6">
+        <img src={foodWasteImage}/>
       </div>
 
       

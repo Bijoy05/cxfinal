@@ -1,6 +1,8 @@
 "use client";
 // after pasting
 
+import { useState } from "react";
+import { LoadingSpinner } from "@/components/extension/loading-spinner";
 import { useNavigate } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
 import {
@@ -74,7 +76,18 @@ const chartOptions = {
 
 
 export const Rooms: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleAddFlight = () => {
+    // Set loading to true and start a timer
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false); // Hide loading modal after 2 seconds
+      navigate("/hotels"); // Navigate to FlightAnalysis
+    }, 4000); // 2-second delay
+  };
+  
   return (
     <div className="mx-auto w-full max-w-3xl p-4">
       <h1 className="text-2xl font-bold mb-4">Flight 179</h1>
@@ -87,8 +100,8 @@ export const Rooms: React.FC = () => {
           <p>05/11/24</p>
         </div>
         <div>
-          <p className="text-gray-500">Flight Region</p>
-          <p>APAC - Asia</p>
+          <p className="text-gray-500">Passengers</p>
+          <p>230</p>
         </div>
         <div>
           <p className="text-gray-500">Flight Route</p>
@@ -166,14 +179,23 @@ export const Rooms: React.FC = () => {
           </Card>
         ))}
         <Button
-        className="mt-6 w-full h-12 mx-auto flex justify-center bg-[#742C94] hover:bg-purple-700"
-        onClick={() => navigate("/hotels")}
-
+        className="mt-6 w-full h-12 mx-auto flex justify-center bg-[#742C94] hover:bg-purple-600"
+        onClick={handleAddFlight}
       >
         <PlusCircle className="mr-2 h-5 w-5" />
-        Regenrate Inventory Recommendation
+        Generate Inventory Recommendation
       </Button>
-      </div>
+
+      {/* Loading Modal */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-[#742C94] p-10 rounded-lg shadow-lg flex flex-col items-center">
+            <p className="text-lg font-semibold mb-4 text-white">Inventory Recommendation <br/> Being Generated...</p>
+            <LoadingSpinner /> {/* Use the custom LoadingSpinner component */}
+          </div>
+        </div>
+      )}
+    </div>
     </div>
   );
 };

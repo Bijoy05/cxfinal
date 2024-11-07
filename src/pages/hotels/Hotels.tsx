@@ -26,8 +26,8 @@ export const Hotels: React.FC = () => {
           <p>05/11/24</p>
         </div>
         <div>
-          <p className="text-gray-500">Flight Region</p>
-          <p>APAC - Asia</p>
+        <p className="text-gray-500">Passengers</p>
+        <p>230</p>
         </div>
         <div>
           <p className="text-gray-500">Flight Route</p>

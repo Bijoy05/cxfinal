@@ -1,5 +1,5 @@
 "use client";
-import { useNavigate } from "react-router-dom";
+
 import { useState } from "react";
 import {
   Card,
@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 
 export const Hotels: React.FC = () => {
-  const navigate = useNavigate();
   return (
     <div className="mx-auto w-full max-w-4xl p-4">
       {/* Page Title */}
@@ -100,51 +99,37 @@ export const Hotels: React.FC = () => {
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border rounded-lg shadow">
           <thead>
-            <tr className="border-b">
-              <th className="py-3 px-4 text-left font-semibold text-gray-600">Meal Item</th>
-              <th className="py-3 px-4 text-left font-semibold text-gray-600">Current Stock</th>
-              <th className="py-3 px-4 text-left font-semibold text-gray-600">Recommended Stock</th>
-              <th className="py-3 px-4 text-left font-semibold text-gray-600">Predicted Waste Reduction</th>
-              <th className="py-3 px-4 text-left font-semibold text-gray-600">Estimated Savings</th>
+            <tr className="border-b bg-purple-200">
+              <th className="py-3 px-4 text-left font-bold text-gray-600">Meal Item</th>
+              <th className="py-3 px-4 text-left font-bold text-gray-600">Current Stock</th>
+              <th className="py-3 px-4 text-left font-bold text-gray-600">Recommended Stock</th>
+              <th className="py-3 px-4 text-left font-bold text-gray-600">Predicted Waste Reduction</th>
+              <th className="py-3 px-4 text-left font-bold text-gray-600">Estimated Savings</th>
             </tr>
           </thead>
           <tbody>
             {[
               {
-                meal: "Beef Bolognese",
-                currentStock: 100,
-                recommendedStock: 80,
-                wasteReduction: "10 lbs",
-                savings: "$30",
+                meal: "Chicken Curry with Rice",
+                currentStock: 90,
+                recommendedStock: 130,
+                wasteReduction: "0 lbs",
+                savings: "$0",
               },
               {
-                meal: "Chicken Tikka Masala",
-                currentStock: 100,
+                meal: "Mushroom Noodles With Potatoes",
+                currentStock: 120,
                 recommendedStock: 80,
-                wasteReduction: "10 lbs",
-                savings: "$30",
+                wasteReduction: "40 lbs",
+                savings: "$100",
               },
               {
-                meal: "Vegetable Lasagna",
-                currentStock: 100,
-                recommendedStock: 80,
+                meal: "Beef Steak with Potatoes",
+                currentStock: 110,
+                recommendedStock: 90,
                 wasteReduction: "10 lbs",
-                savings: "$30",
-              },
-              {
-                meal: "Mixed Berry Breakfast Parfait",
-                currentStock: 100,
-                recommendedStock: 80,
-                wasteReduction: "10 lbs",
-                savings: "$30",
-              },
-              {
-                meal: "Croissant",
-                currentStock: 100,
-                recommendedStock: 80,
-                wasteReduction: "10 lbs",
-                savings: "$30",
-              },
+                savings: "$40",
+              }
             ].map((item, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
                 <td className="py-3 px-4">{item.meal}</td>

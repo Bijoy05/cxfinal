@@ -1,10 +1,11 @@
-import { BedSingle } from "lucide-react";
+
+import logoImage from "@/assets/logo.png";
 
 export const Home = () => {
   return (
     <div className="mx-auto my-auto">
-      <BedSingle size={100} className="mx-auto mb-4"/>
-      <h1 className="text-7xl font-bold">Timepass Manager</h1>
+      <img className="mx-auto mb-4" src={logoImage}/>
+      <h1 className="text-7xl font-bold text-purple-800">eServe</h1>
     </div>
   );
 };

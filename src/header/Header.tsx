@@ -53,9 +53,10 @@ const Header = () => {
         <LogoLink href="/">
         <img src={logoImage} alt="Logo" className="w-8 h-8" />
         </LogoLink>
-        <HeaderLink href="/hotels"><div className="text-white">Inventory</div></HeaderLink>
-        <HeaderLink href="/rooms"><div className="text-white">Analysis</div></HeaderLink>
         <HeaderLink href="/flights"><div className="text-white">Flights</div></HeaderLink>
+        <HeaderLink href="/rooms"><div className="text-white">Analysis</div></HeaderLink>
+        <HeaderLink href="/hotels"><div className="text-white">Inventory</div></HeaderLink>
+        
       </nav>
       <div className="flex items-center ml-auto gap-2">
         <ModeToggle />

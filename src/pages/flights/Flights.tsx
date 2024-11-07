@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlusCircle } from "lucide-react";
+import { LoadingSpinner } from "@/components/extension/loading-spinner";
 
 
 // Importing images from /src/assets/
@@ -24,7 +25,17 @@ export const Flights: React.FC = () => {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [flightDate, setFlightDate] = useState<string>("");
   const [flightNumber, setFlightNumber] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false); // Loading state
   const navigate = useNavigate();
+
+  const handleAddFlight = () => {
+    // Set loading to true and start a timer
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false); // Hide loading modal after 2 seconds
+      navigate("/rooms"); // Navigate to FlightAnalysis
+    }, 4000); // 2-second delay
+  };
 
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,13 +170,22 @@ export const Flights: React.FC = () => {
 
       {/* Generate Report Button */}
       <Button
-        className="mt-6 w-full h-12 mx-auto flex justify-center bg-[#742C94] hover:bg-purple-700"
-        onClick={() => navigate("/rooms")}
-
+        className="mt-6 w-full h-12 mx-auto flex justify-center bg-[#742C94] hover:bg-purple-600"
+        onClick={handleAddFlight}
       >
         <PlusCircle className="mr-2 h-5 w-5" />
         Add Flight
       </Button>
+
+      {/* Loading Modal */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-[#742C94] p-10 rounded-lg shadow-lg flex flex-col items-center">
+            <p className="text-lg font-semibold mb-4 text-white">Image Being <br/> Processed...</p>
+            <LoadingSpinner /> {/* Use the custom LoadingSpinner component */}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
